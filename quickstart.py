@@ -1,8 +1,5 @@
 import os.path
 import base64
-from dotenv import load_dotenv
-
-load_dotenv('.env')
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -40,7 +37,7 @@ def main():
   try:
     # Call the Gmail API
     service = build("gmail", "v1", credentials=creds)
-    RedBubble = os.getenv("RedBubble")
+    RedBubble = (process.env.RedBubble)
     query = f"-is:starred from: {RedBubble}"
     results = service.users().messages().list(userId="me", q=f"{query}", maxResults=5).execute()
     messages = results.get("messages", [])
@@ -79,11 +76,11 @@ def main():
     # send an email to user for latest price updates and trending NFTs
     with smtplib.SMTP("smtp.gmail.com", 587) as connection:
         connection.starttls()
-        connection.login(user=os.getenv('user'), password=os.getenv('password'))
-        connection.sendmail(from_addr=os.getenv('user'), to_addrs=os.getenv('to_addrs'),
+        connection.login(user=(process.env.user)), password=(process.env.password))
+        connection.sendmail(from_addr=(process.env.user), to_addrs=(process.env.to_addrs)),
                             msg=email)
 
-  except :
+  except:
     # TODO(developer) - Handle errors from gmail API.
     print("No new sales")
 
